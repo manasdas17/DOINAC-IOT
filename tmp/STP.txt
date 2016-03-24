@@ -1,0 +1,426 @@
+﻿		/* DOINA© - Device On the InterNet for Acquisition and Control */ 
+		/* Thing  - An electronic device that implements STP and offers an interface for communicating */
+		/* STP    - Simple Things Protocol */
+		
+		Apache PHP Server Operation:
+			User requests a web page 
+			PHP processes the request using MYSQL database
+			Web page is returned back to the user 
+			
+		NodeJS Server operation:
+			Client connects -> save ID and socket
+			Device connects -> save ID and socket
+							   get from the database device template and build device object
+			
+			Client requests data (action, command etc.)
+			NodeJS process the request and forward it to the device
+			
+			Device returns data
+			NodeJS process the data (using device template), filter it and forward some of it to the client
+			Also stores it into the database
+			
+		Q&A:
+			- When does the device send data?
+			1) When requested
+			2) When an event is ocurred. (Notification).
+			3) Always when it wants to.
+			
+			- When variables should be stored into the database?
+			1) When state changed
+			2) Every minute
+		
+		Variable types:
+			1) State variables:	ON/OFF, Cold/Warm/Hot, -16/-15/-12/-10
+			2) Volatiles variables: 13.4, 42 etc. (i.e limited set of numbers)
+			
+			Variables can have configurations in the file:
+				1) be settable  - There exist a command to set the value for this variable (i.e we can action it)
+				2) have units   - numeric variables can have types for example Celsius, Percents, Watts etc.
+				3) have id/name - Like 1 = Temperature, 2 = Humidity etc.
+				4) have type    - float, text, binary, integer, byte (for states)
+				5) a range      - numerical variables can have min/max range
+		
+		Data Packet:
+			<PCKT_START><pckt_type>[packet_id]<frame_nr><frame_type>[frame_1, frame_2, ... frame_n]<PCKT_END>
+			
+			<pckt_type>  - 1 byte  - indicates if it's a self containing packet, or there's a packet train.
+			<packet_id>  - 1 byte  - indicates the id of the packet in the train.
+		
+			<frame_nr>   - 1 byte  - indicates number of frames the packet contains.
+			
+			Then <frame_nr> repeating blocks follows:
+			
+				<frame_type> - 1 byte  - data, error, acknowledgement, real time data, event, warning etc. 
+				<var_nr>     - 1 byte  - number of variables the frame contains
+				
+				Then <var_nr> repeating blocks as follows.
+					<var_id>    - 1 byte  - id of the variable => we can get all the information about this variable from config file by id.
+					[var_len]   - 2 byte  - for text variables
+					<var_value> - x bytes - depends on the type of the variable
+			
+
+		
+		
+		Operation for users:
+		1) user registers to the web site
+		2) receive authentication token 
+		3) program the esp8266 device with wifi password, authentication token etc.
+		4) just use it
+		 
+		for developers:
+		1) Add STP to your device
+		2) connect your device to DOINAC
+		3) Provide a configuration file for the device
+		4) provide application?
+		
+		
+		++ Caching system. 
+		When device is connecting to the server, after login and all stuff, it will try first to send all the cache data it has.
+		
+		
+		-> Should the events be attached to device or web server?
+			  answer: attach custom events to web server
+			  device events attach to actions, action types -> work and rule
+		
+			  example state:  -> if (t > 10) => power off / power oN
+			Thing Configuration (XML)
+			<device>
+				<name>DEVICE_NAME</name>
+				
+			<states>
+				<state>
+					<id></id>
+					<name></name>
+					<type></type>
+					<configurable></configurable>
+						<units></units>
+					<span>
+						<value>
+							<id></id>
+							<name></name>
+						</value>
+						...
+					</span>
+					</state>
+					...
+				</states>
+				
+				<actions>
+					<action>
+						<name></name>
+						<args>
+							<arg_id></arg_id>
+							<arg_name type=""></arg_name>
+						</args>
+					</action>
+					...
+		
+				</actions>
+			
+		
+		
+		
+		
+		
+		HOST Device can send events, alerts, acknowledgments etc. */
+		
+		Host Device:
+		1) It can read data about temperature, humidity, status etc. (sense)
+		 2) It can respond to commands (action)
+		 3) It can generate events (alerts fall in this category)
+		
+		
+		No command should be longer than 1kb
+		if the command is longer than 1kb. -> todo: should be divided in chunks etc.
+		STP specifications:
+			
+		
+		
+		On server side we have the XML configuration for the device
+		where all the commands are defined, all the variables, their ids, and their names
+		All have variables!!!
+		
+		<device>
+			<name>Smart Fridge</name>		<-- editable
+		 
+		 <data>
+		 	<state id="0" settable="true" type="integer" span="finite">	<-- finite should contain values pairs
+		 		<name>Status<name>
+		 		<values>
+		 			<value val="0">OFF</value>
+		 			<value val="1">ON</value>
+					</values>
+					<events>
+						<change>Status changed</change>
+					</....>
+				</state>
+				<state id="1" settable="false" type="real" span="infinite" units="celsius">
+					<name>Temperature</name>
+					<timeout>100</timeout>  // how fast we can read or set the state
+				</state>
+			    <state id="2" settable="false" type="text">
+					<name>Current TV Channel</name>
+				</state>
+		<date>
+		
+		<actions>
+			<action id="0">
+				<name>Next TV channel</name>
+				<args>
+					<name>skip<name>
+					<value type="integer"></value>
+			</action>
+		 </actions>
+			
+		 
+		 
+		
+		
+		</device>
+		
+		
+		
+		What kind of states do we have?
+		finite sets {1, 5, 9}, {ON, OFF} etc. both can be setable or unsetable
+		infinite set {0..3.4}		
+		
+		
+		events/alerts to register (events are registered to variables).
+		
+
+		
+		HOST 1 - Fridge
+		Sense:
+			  1) Power consumption		<- read value 
+		   2) up temperature			<- read value
+		   3) down temperature		<- read value
+		   4) current consumption	<- read value
+		   5) is On/is Off			<- read state		
+		   6) light bulb  isOn/isOff <- read state
+		   
+		   7) states: temperature up set (-21 -17 -15 -10)  -> set state
+		              temperature down set (-15 -10 -5 0)   -> set state
+		              items: count, products (for example added from the database) <- read data?
+		              
+		Action:
+			  1) read x (a state or a variable, add continously?)
+			  2) set state (power on, off, sens readings etc.)
+		
+		<device>
+			<name>Fridge</name>
+			<serial>FR1232SG</serial>
+			
+			<data>
+				<states>
+					<state settable="true" units="Celsius">
+						<name>Temperature</name>
+						<values>
+							<value id="0">-15</value>
+							<value id="1">-20</value>
+						</values>
+					</state>
+				</states>
+				<volatiles>
+					<volatile settable=true units="Celsius" type="integer"> 
+						<name>Freeze Temperature</name>
+						<range>
+							<min>-15</min>
+							<max>20</max>
+						</range?
+					</volatile>
+			</data>
+			
+			<actions>
+				<action id="0">
+					<name>Power</name>
+					<arguments>
+						<argument id="0">
+							<name>ON or OFF</name>
+							<value type="state">
+								<state id="0">ON</state>
+								<state id="1">OFF</state>
+							</value>
+						</argument>
+					</arguments>
+				</action>
+				<action id="1">
+					<name>Set Temperature</name>
+					<arguments>
+						<argument id="0">
+							<name>Temperature to Set</name>
+							<value type="real">
+								<range../>
+							</value>
+						</argument>
+					</arguments>
+				</action>
+			</actions>
+						
+
+	
+		HOST 2 - Sensor kit 
+		  1) power consumption
+		  2) temperature 1
+		  3) temperature 2
+		  4) temperature 3
+		  5) humidity 1
+		  6) humidity 2
+		  7) gas concentration 1 CO2
+		  8) gas concentration 2 CH4
+		  9) is on/is off
+		
+		
+		
+		HOST 3 - Smart TV
+		   1) power consumption
+		   2) is on/off
+		   3) what TV channel?
+		   4) what is quality?
+		   5) what is serial ID of TV
+		   6) next channel
+		   7) prev channel
+		   8) turn on/off
+		   9) select channel -> return success if channel is set, not success if otherwise
+		
+		
+
+		
+		
+		HOST requirements:
+		
+		-> HOST should implement STP (Simple Things Protocol)
+		    to be able to connect to esp8266
+		
+		
+		
+		
+		 
+		 
+Data types:
+
+		 
+		 
+data -> status, timestamp(finite), store as INTEGER -> Device changed status at time given by 'timestamp'
+temperature, humidity etc. -> store as real numbers
+
+
+
+<device> 
+	<name>Fridge</name>
+	<serialId>FR1232SG</serialId>
+	
+	<data>
+		<states>
+			<state id="0" settable="true" units="Celsius">
+				<name>Temperature</name>
+				<stateValues>
+					<stateValue id="0">-15</stateValue>
+					<stateValue id="1">-20</stateValue>
+				</stateValues>
+			</state>
+			<state id="1" settable="false" units="Celsius"> 
+				<name>Temperature</name>
+				<stateValues>
+					<stateValue id="0">-15</stateValue>
+					<stateValue id="1">-20</stateValue>
+				</stateValues>
+			</state>
+		</states>
+		<volatiles>
+			<volatile id="2" settable="true" units="Celsius"> 
+				<name>Freeze Temperature</name>
+				<volatileRange type="integer">
+					<min>-15</min>
+					<max>20</max>
+				</volatileRange>
+			</volatile>
+			<volatile id="3" settable="true" units="Celsius"> 
+				<name>Freeze Temperature</name>
+				<volatileRange type="text">
+					<min>0</min>
+					<max>20</max>
+				</volatileRange>
+			</volatile>
+		</volatiles>
+	</data> 
+	
+	<actions>
+		<action id="0">
+			<name>Power</name>
+			<arguments>
+				<argument id="0">
+					<name>ON or OFF</name>
+					<stateValues>
+						<stateValue id="0">ON</stateValue>
+						<stateValue id="1">OFF</stateValue>
+					</stateValues>
+				</argument>
+			</arguments>
+		</action>
+		
+		<action id="1">
+			<name>Set Temperature</name>
+			<arguments>
+				<argument id="0">
+					<name>Temperature to Set</name>
+					<volatileRange type="real">
+						<min>-15</min>
+						<max>20</max>
+					</volatileRange>
+				</argument>
+				<argument id="1">
+					<name>Temperature to Set</name>
+					<volatileRange type="real">
+						<min>-15</min>
+						<max>20</max>
+					</volatileRange>
+				</argument>
+			</arguments>
+		</action>
+		
+	</actions>
+	
+</device>
+
+
+
+DATABASE:
+
+Table:
+
+	device -> device_serial_id -> uniq identifier for the device
+	device_template_id         -> identifies what kind of thing it is and what can it do (i.e it templates)
+								  multiple devices can have the same template
+
+	users
+	--------------------
+	user_id | first_name | last_name | email | password | user_token |
+
+
+	things_templates
+	------------------------
+	template_id |  config |
+	
+	
+	things
+	-------------------------
+	thing_uuid | template_id
+
+	
+	user_things
+	------------
+	user_id | thing_uuid
+		
+		
+	volatile_table
+	-----------------------------------------
+	thing_uuid | volatile_id | float_value | timestamp
+	
+	state_table
+	----------------------------------------
+	thing_uuid | state_id | int_value | timestamp
+	
+	
+	
+	
+
