@@ -48,6 +48,9 @@ h2 {
 	background: rgba(46, 51, 56, 0.2);
 }
 
+.label-pill {
+	border-radius:90%;
+}
 
 
 
