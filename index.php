@@ -114,6 +114,53 @@
   </div>
 
 
+  <!-- Modal -->
+  <div class="modal fade bs-modal-sm" id="login-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h3><center>Sign In<center></h3>
+          <br>
+          <form class="form-horizontal" method="POST" action="scripts/signin.php">
+            <fieldset>
+              <div class="control-group">
+                <label class="control-label" for="signin-email">Email</label>
+                <input required="" id="signin-email" name="signin-email" type="text" class="form-control" placeholder="Enter your email" class="input-medium" required="true">
+              </div>
+
+              <div class="control-group">
+                <label class="control-label" for="signin-password">Password:</label>
+                <input required="" id="signin-password" name="signin-password" class="form-control" type="password" placeholder="password" class="input-medium">
+              </div>
+
+              <!-- Multiple Checkboxes (inline) -->
+              <div class="control-group" style="margin-left:20px">
+                <label class="control-label" for="remember-me-cb"></label>
+                  <label class="checkbox inline" for="remember-me-cb-id">
+                    <input type="checkbox" name="rememberme" id="remember-me-cb-id" value="Remember me">Remember me
+                  </label>
+              </div>
+              <!-- Button -->
+              <div class="control-group">
+                <label class="control-label" for="signin"></label>
+                <div class="controls">
+                  <center>
+                    <button id="signin" name="signin" class="btn btn-md btn-info">Sign In</button>
+                  </center>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+          <br>
+          <div class="modal-footer">
+            <center>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </center>
+          </div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Put the script at the bottom for better performance -->
   <script src="lib/jquery-2.2.2.js" type="text/javascript" charset="utf-8"></script>

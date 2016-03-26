@@ -10,7 +10,7 @@
                 "first_name" => "VARCHAR(20) NOT NULL",
                 "last_name"  => "VARCHAR(20) NOT NULL",
                 "email"      => "VARCHAR(30) NOT NULL UNIQUE KEY",
-                "password"   => "VARCHAR(32) NOT NULL"
+                "password"   => "CHAR(64) NOT NULL"
             )
         );
     }
@@ -36,11 +36,14 @@
 
     function db_users_check_credentials($email, $password) {
 
+        global $db;
+
         $password = hash('sha256', $password);
         $sql = "SELECT * FROM users WHERE email = '$email' and password = '$password'";
 
         $rows = $db->query($sql);
         return $rows->rowcount() != 0;
     }
+
 
  ?>

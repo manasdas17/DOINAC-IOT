@@ -2,6 +2,7 @@
     
     require_once 'functions.php';
     require_once 'db_users.php';
+    require_once 'setup.php';
 
     /* validate email AJAX request */
     if (isset($_POST['check-email'])) {
