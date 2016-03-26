@@ -66,31 +66,36 @@
               <h4>Create an account</h4>
             </div>
             <div class="panel-body">
-              <form method="POST" action="scripts/signup.php" role="form">
-                <div class="form-group">
-                  <label class="control-label" for="signupFName">First Name</label>
-                  <input name="signupFName" id="signupFName" type="text" maxlength="50" class="form-control">
+              <form method="POST" action="scripts/signup.php" onsubmit="return validateSignUp(this)" role="form">
+                <div class="form-group" id="signup-fname-group">
+                  <label class="control-label" for="signup-fname" >First Name</label>
+                  <label id="fname-error" class="control-label hidden" for="signup-fname" style="float:right">Please enter your first name</label>
+                  <input name="signup-fname" id="signup-fname" type="text" maxlength="20" class="form-control">
+                </div>
+                <div class="form-group" id="signup-lname-group">
+                  <label class="control-label" for="signup-lname">Last Name</label>
+                  <label id="lname-error" class="control-label hidden" for="signup-lname" style="float:right">Please enter your last name</label>
+                  <input name="signup-lname" id="signup-lname" type="text" maxlength="20" class="form-control">
+                </div>
+                 <div class="form-group" id="signup-email-group">
+                  <label id="email-error" class="control-label hidden" for="signup-email" style="float:right">Email Error</label>
+                  <label class="control-label" for="signup-email">Email</label>
+                  <input name="signup-email" id="signup-email" type="email" maxlength="30" class="form-control">
+                </div>
+                <div class="form-group" id="signup-password-group">
+                  <label class="control-label" for="signup-password">Password</label>
+                  <label id="password-error" class="control-label hidden" for="signup-password" style="float:right">Password too short</label>
+                  <input name="signup-password" id="signup-password" type="password" maxlength="25" class="form-control" placeholder="at least 6 characters" length="25">
+                </div>
+                <div class="form-group" id="signup-password-repeat-group">
+                  <label class="control-label" for="signup-password-repeat">Repeat the password</label>
+                   <label id="password-repeat-error" class="control-label hidden" for="signup-password-repeat" style="float:right">No match</label>
+                  <input name="signup-password-repeat" id="signup-password-repeat" type="password" maxlength="25" class="form-control">
                 </div>
                 <div class="form-group">
-                  <label class="control-label" for="signupLName">Last Name</label>
-                  <input id="signupLName" type="text" maxlength="50" class="form-control">
+                  <button id="signup-submit-btn" type="submit" class="btn btn-info btn-block">Create your account</button>
                 </div>
-                <div class="form-group">
-                  <label class="control-label" for="signupEmail">Email</label>
-                  <input id="signupEmail" type="email" maxlength="50" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label class="control-label" for="signupPassword">Password</label>
-                  <input id="signupPassword" type="password" maxlength="25" class="form-control" placeholder="at least 6 characters" length="40">
-                </div>
-                <div class="form-group">
-                  <label class="control-label" for="signupPasswordagain">Password again</label>
-                  <input id="signupPasswordagain" type="password" maxlength="25" class="form-control">
-                </div>
-                <div class="form-group">
-                  <button id="signupSubmit" type="submit" class="btn btn-info btn-block">Create your account</button>
-                </div>
-                <p class="form-group" style="font-size:12px; color:white;">By creating an account, you agree to our <a href="#">Terms of Use</a> and our <a href="#">Privacy Policy</a>.</p>
+                <p class="form-group">By creating an account, you agree to our <a href="#">Terms of Use</a> and our <a href="#">Privacy Policy</a>.</p>
                 <hr>
                 <p></p>Already have an account? <a href="">Sign in</a></p>
               </form>
@@ -109,8 +114,12 @@
   </div>
 
 
+
   <!-- Put the script at the bottom for better performance -->
   <script src="lib/jquery-2.2.2.js" type="text/javascript" charset="utf-8"></script>
   <script src="lib/bootstrap-3.3.6-dist/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/home.js" type="text/javascript" charset="utf-8"></script>
+
+
 </body>
 </html>
