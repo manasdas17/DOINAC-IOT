@@ -1,5 +1,35 @@
 
 
+function validateSignIn(form) {
+
+    var email = form['signin-email'].value;
+    var pass  = form['signin-password'].value;
+    var error = "";
+    if ((email == "") || (pass == "")) {
+        error = "Please enter your credentials"
+    } 
+    else {
+        $.ajax({
+            url:     "scripts/signin.php",
+            type:    "POST",
+            async:   false,
+            timeout: 1000,      
+            success: function(result) {
+                if (result != "ok") {
+                    error  = "Invalid Email or Password";
+                }
+            },
+            data : {
+                "signin-check-email"   : email,
+                "signin-check-password": pass
+            }
+         });
+    }
+
+    
+    return (error == "");
+}
+
 function validateSignUp(form) {
 
 

@@ -7,30 +7,25 @@
     $email    = "";
     $password = "";
 
-
-    /* validate credebtuaks AJAX request */
-
-
-    /* Not very DRY, TODO: refactor! */
-    if (isset($_POST['signin-email'])) {
-        $email = safe_string($_POST['signin-email']);
-    } else {
-        echo "error";
-        exit();
-    }
-
-    if (isset($_POST['signin-password'])) {
-        $password = safe_string($_POST['signin-password']);
-    } else {
-        echo "error";
-        exit();
-    }
-
+    $email    = safe_string(isset_or_empty($_POST['signin-check-email']));
+    $password = safe_string(isset_or_empty($_POST['signin-check-password']));
     if (db_users_check_credentials($email, $password)) {
-        echo "success";
-    } else {
-        echo "Nope, not found";
-    }
 
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+
+        $user_data = db_users_get_by_email($email);
+        
+
+        $_SESSION['login-email']      = $email;
+        $_SESSION['login-first-name'] = $user_data['first_name'];
+        $_SESSION['login-last-name']  = $user_data['last_name'];
+        $_SESSION['loggedin']         = true;
+        
+        echo "ok";
+    } else {
+        echo "invalid";
+    }
 
  ?>

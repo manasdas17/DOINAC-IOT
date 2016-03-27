@@ -1,7 +1,32 @@
+<?php 
+  
+  require_once 'scripts/functions.php';
+
+  if (!isset($_SESSION)) {
+    session_start();
+  }
+
+  $isLogged = false;
+  if (isset($_SESSION['loggedin'])) {
+    $isLogged = $_SESSION['loggedin'];
+  }
+
+  if ($isLogged) {
+    header("Location: dashboard_home.php");
+    exit();
+  }
+
+ ?>
+
+
 
 <!DOCTYPE html>
 <html>
 <head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Import stylesheets at the top for better user performance -->
   <link rel="stylesheet" type="text/css" href="lib/bootstrap-3.3.6-dist/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/styles.css">
@@ -121,7 +146,7 @@
         <div class="modal-body">
           <h3><center>Sign In<center></h3>
           <br>
-          <form class="form-horizontal" method="POST" action="scripts/signin.php">
+          <form class="form-horizontal" method="POST" onsubmit="return validateSignIn(this)" action="dashboard_home.php" role="form">
             <fieldset>
               <div class="control-group">
                 <label class="control-label" for="signin-email">Email</label>

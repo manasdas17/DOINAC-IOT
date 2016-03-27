@@ -32,9 +32,25 @@
         $string = stripcslashes($string);
 
         return $string;
-
     }
 
+    function isset_or_empty($variable) {
+        if (isset($variable)) {
+            return $variable;
+        } else {
+            return "";
+        }
+    }
 
+    function destroy_session_and_data() {
+        
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+
+        $_SESSION = array();
+        setcookie(session_name(), '', time() - 2592000, '/');
+        session_destroy();
+    }
 
  ?>

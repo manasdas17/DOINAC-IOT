@@ -25,13 +25,7 @@
     }
 
     function db_users_check_email_exists($email) {
-
-        global $db;
-
-        $sql = "SELECT * FROM users WHERE email = '$email'";
-
-        $rows = $db->query($sql);
-        return $rows->rowcount() !== 0;
+        return !empty(db_users_get_by_email($email));
     }
 
     function db_users_check_credentials($email, $password) {
@@ -45,5 +39,14 @@
         return $rows->rowcount() != 0;
     }
 
+    function db_users_get_by_email($email) {
+
+        global $db;
+
+        $sql  = "SELECT id, first_name, last_name FROM users WHERE email = '$email'";
+        $rows = $db->query($sql);
+
+        return $rows->fetch(PDO::FETCH_ASSOC);
+    }
 
  ?>
