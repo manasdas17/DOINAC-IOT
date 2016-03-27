@@ -22,6 +22,10 @@
 
         db_users_add_user($first_name, $last_name, $email, $password);
         
+        /* ECHO a page that account is created succesful etc. */
+
+
+
     }
   
  ?>

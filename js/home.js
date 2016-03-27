@@ -26,6 +26,11 @@ function validateSignIn(form) {
          });
     }
 
+    if (error != "") {
+        $("#signin-error").removeClass("hidden");
+    } else {
+        $("#signin-error").addClass("hidden");
+    }
     
     return (error == "");
 }

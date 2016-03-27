@@ -1,6 +1,6 @@
 <?php 
 
-    require_once 'credentials.php';
+    require_once 'db_credentials.php';
 
     $db = new PDO("mysql:host=".$db_hostname.";dbname=".$db_database.";charset=utf8",
                   $db_username, $db_password);
@@ -34,12 +34,22 @@
         return $string;
     }
 
-    function isset_or_empty($variable) {
+    /* Returns the variable value if it exists or empty if it doesn't.
+       Note that we make a pass by reference so we can send globals and it will work 
+    */
+    function isset_or_empty(&$variable) {
         if (isset($variable)) {
             return $variable;
         } else {
             return "";
         }
+    }
+
+    function start_session_if_not_started() {
+        if (!isset($_SESSION)) {
+            session_start();
+    }
+
     }
 
     function destroy_session_and_data() {
@@ -51,6 +61,11 @@
         $_SESSION = array();
         setcookie(session_name(), '', time() - 2592000, '/');
         session_destroy();
+    }
+
+    function redirect_and_exit($url) {
+        header("Location: " . $url);
+        exit();
     }
 
  ?>
