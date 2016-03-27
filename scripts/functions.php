@@ -38,17 +38,19 @@
        Note that we make a pass by reference so we can send globals and it will work 
     */
     function isset_or_empty(&$variable) {
+       
         if (isset($variable)) {
             return $variable;
         } else {
-            return "";
+            return "";  /* Also empty is considered as a false value */
         }
     }
 
     function start_session_if_not_started() {
+       
         if (!isset($_SESSION)) {
             session_start();
-    }
+        }
 
     }
 
@@ -66,6 +68,19 @@
     function redirect_and_exit($url) {
         header("Location: " . $url);
         exit();
+    }
+
+    function check_logged_and_redirect() {
+
+        start_session_if_not_started();
+
+        $loggedin = isset_or_empty($_SESSION['loggedin']);
+
+
+        if (!$loggedin) {
+            /* If user is not logged in then redirect to home page */
+            redirect_and_exit("index.php");
+        }
     }
 
  ?>

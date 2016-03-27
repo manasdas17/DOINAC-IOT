@@ -168,44 +168,44 @@
       <ul class="nav navbar-nav side-nav">
         <!-- put a navigation side bar with a list of icons and text -->  
         <li class="active">
-          <a href="">
+          <a href="dashboard_home.php">
             <i class="fa fa-fw fa-home"></i>
             Home
           </a>
           <!-- fw stands for fixed width --> </li>
         <li>
-          <a href="">
+          <a href="dashboard_things.php">
             <i class="fa fa-fw fa-heart"></i>
             Things
           </a>
           <!-- just a link with links to other pages --> </li>
         <li>
-          <a href="">
+          <a href="dashboard_monitor.php">
             <i class="fa fa-fw fa-cloud-upload"></i>
             Monitor
           </a>
         </li>
         <li>
-          <a href="">
+          <a href="dashboard_statistics.php">
             <i class="fa fa-fw fa-bar-chart"></i>
             Statistics
           </a>
         </li>
         <li>
-          <a href="">
+          <a href="dashboard_mailbox.php">
             <i class="fa fa-fw fa-envelope"></i>
             Mailbox
             <span class="badge pull-right">44</span>
           </a>
         </li>
         <li>
-          <a href="">
+          <a href="dashboard_notifications.php">
             <i class="fa fa-fw fa-bell"></i>
             Notifications
           </a>
         </li>
         <li>
-          <a href="">
+          <a href="dashboard_settings.php">
             <i class="fa fa-fw fa-cog"></i>
             Settings
           </a>

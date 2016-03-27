@@ -1,18 +1,8 @@
 <?php 
-
     require_once 'scripts/functions.php';
-
-    start_session_if_not_started();
-
-    $loggedin = isset_or_empty($_SESSION['loggedin']);
-
-
-    if (!$loggedin) {
-        /* If user is not logged in then redirect to home page */
-        redirect_and_exit("index.php");
-    }
-
+    check_logged_and_redirect();
  ?>
+
 
 <!DOCTYPE>
 <html>
@@ -98,7 +88,7 @@
             point = [t*100000, Math.sin(t)*100];
             chart.series[0].addPoint(point, true, shift);
       
-    }, 100);
+    }, 1000);
 
   </script>
 
